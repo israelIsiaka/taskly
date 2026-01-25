@@ -10,6 +10,11 @@ import SwiftData
 
 @main
 struct tasklyApp: App {
+    init() {
+        // Register Sora fonts on app launch
+        FontHelper.registerFonts()
+    }
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
