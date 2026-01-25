@@ -21,8 +21,10 @@ struct MainWindowView: View {
         return selectedView.rawValue
     }
     
+    @State private var sidebarVisibility: NavigationSplitViewVisibility = .doubleColumn
+    
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $sidebarVisibility) {
             // Native macOS Sidebar
             SidebarView(
                 selectedView: $selectedView,
@@ -76,8 +78,13 @@ struct MainWindowView: View {
                                 .font(.soraTitle)
                                 .foregroundColor(ColorPalette.textPrimary)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        case .someday:
-                            Text("Someday View")
+                        case .flagged:
+                            Text("Flagged View")
+                                .font(.soraTitle)
+                                .foregroundColor(ColorPalette.textPrimary)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        case .completed:
+                            Text("Completed View")
                                 .font(.soraTitle)
                                 .foregroundColor(ColorPalette.textPrimary)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -89,6 +96,22 @@ struct MainWindowView: View {
         }
         .background(ColorPalette.background)
         .frame(minWidth: 800, minHeight: 600)
+        .toolbar {
+            // Hide sidebar toggle button
+            ToolbarItem(placement: .automatic) {
+                EmptyView()
+            }
+        }
+        .onAppear {
+            // Force sidebar to always be visible
+            sidebarVisibility = .doubleColumn
+        }
+        .onChange(of: sidebarVisibility) { oldValue, newValue in
+            // Prevent sidebar from being collapsed - always keep it visible
+            if newValue != .doubleColumn {
+                sidebarVisibility = .doubleColumn
+            }
+        }
         .onChange(of: selectedProject) { oldValue, newValue in
             if newValue != nil {
                 selectedView = .inbox // Reset to inbox when project is selected
