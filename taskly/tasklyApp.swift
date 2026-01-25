@@ -67,6 +67,8 @@ struct tasklyApp: App {
                     }
                 }
         }
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unified(showsTitle: false))
         .modelContainer(sharedModelContainer)
     }
 }

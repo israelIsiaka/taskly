@@ -117,4 +117,84 @@ extension View {
                 y: 2
             )
     }
+    
+    /// Apply glass card style with enhanced shadows
+    func glassCardStyle() -> some View {
+        self
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            // 1. Inner Border (High-end edge highlight)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(.white.opacity(0.5), lineWidth: 0.5)
+            )
+            // 2. Soft Drop Shadow
+            .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
+            // 3. Diffused Ambient Shadow
+            .shadow(color: .black.opacity(0.06), radius: 15, x: 0, y: 10)
+    }
+}
+
+// MARK: - Button Styles
+
+struct GlowButtonStyle: ButtonStyle {
+    @State private var isHovered = false
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.horizontal, 24)
+            .padding(.vertical, 14)
+            .background(
+                ZStack {
+                    // The Primary Gradient
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(LinearGradient(
+                            colors: [Color.blue, Color.blue.opacity(0.8)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ))
+                    
+                    // The Hover Overlay (brightens the button)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(.white.opacity(isHovered ? 0.1 : 0))
+                }
+            )
+            // Layered Shadows for the "Glow" look
+            .shadow(color: .blue.opacity(isHovered ? 0.5 : 0.3), radius: isHovered ? 15 : 10, x: 0, y: 8)
+            .shadow(color: .blue.opacity(0.2), radius: 2, x: 0, y: 2)
+            .scaleEffect(isHovered ? 1.02 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
+            .onHover { hovering in
+                isHovered = hovering
+            }
+    }
+}
+
+// MARK: - Bloom Button Component
+
+struct BloomButton: View {
+    let icon: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                // The "Bloom" shadow
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.blue.opacity(0.4))
+                    .frame(width: 32, height: 32)
+                    .blur(radius: 8)
+                    .offset(y: 4)
+                
+                // The Button
+                Image(systemName: icon)
+                    .foregroundColor(.white)
+                    .font(.system(size: 18, weight: .bold))
+                    .frame(width: 36, height: 36)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+        }
+        .buttonStyle(.plain)
+    }
 }
