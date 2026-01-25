@@ -128,11 +128,6 @@ class FontHelper {
                 failedCount += 1
             }
         }
-        
-        print("\n📊 Font Registration Summary:")
-        print("   ✅ Registered: \(registeredCount)")
-        print("   ❌ Failed: \(failedCount)")
-        print("   📦 Total: \(fontNames.count)")
     }
     
     /// List all available Sora fonts (useful for debugging)

@@ -11,48 +11,50 @@
 - [X] Configure app icon and assets catalog
 
 ### 1.2 Dependencies & Fonts
-- [ ] Add Sora font family to project
-- [ ] Configure font loading and registration
-- [ ] Create font extension/helper for Sora font usage
-- [ ] Test font rendering across all weights (Regular, Medium, Semibold, Bold)
-- [ ] Set up SF Symbols for icons
+- [x] Add Sora font family to project
+- [x] Configure font loading and registration
+- [x] Create font extension/helper for Sora font usage
+- [x] Test font rendering across all weights (Regular, Medium, Semibold, Bold)
+- [x] Set up SF Symbols for icons
 
 ### 1.3 Project Structure
-- [ ] Set up folder structure (Models, Views, ViewModels, Services, Utilities)
-- [ ] Create base architecture (MVVM or similar)
-- [ ] Set up dependency injection container (if using)
+- [x] Set up folder structure (Models, Views, ViewModels, Services, Utilities)
+- [x] Create base architecture (MVVM or similar)
+- [x] Set up dependency injection container (if using)
 - [ ] Configure build schemes (Debug, Release)
 
 ## Phase 2: Data Model & Persistence
 
-### 2.1 Core Data Setup
-- [ ] Create Core Data model file (.xcdatamodeld)
-- [ ] Design entity schema:
-  - [ ] Task entity (title, description, dueDate, priority, isFlagged, isCompleted, createdAt, updatedAt)
-  - [ ] Project entity (name, color, icon, description, createdAt)
-  - [ ] Subtask entity (relationship to Task)
-  - [ ] Tag/Label entity (optional, for task tags)
-- [ ] Set up relationships (Task → Project, Task → Subtasks)
-- [ ] Configure Core Data stack
-- [ ] Create Core Data manager/service class
+### 2.1 SwiftData Setup
+- [x] Create SwiftData model classes (@Model)
+- [x] Design entity schema:
+  - [x] TaskItem entity (id, title, timestamp - placeholder)
+  - [x] Project entity (id, name, timestamp - placeholder)
+  - [x] Complete TaskItem entity (title, description, dueDate, priority, isFlagged, isCompleted, createdAt, updatedAt)
+  - [x] Complete Project entity (name, color, icon, description, createdAt)
+  - [x] Subtask entity (relationship to TaskItem)
+  - [x] Tag/Label entity (optional, for task tags)
+- [x] Set up relationships (TaskItem → Project, TaskItem → Subtasks, TaskItem → Tags)
+- [x] Configure SwiftData ModelContainer
+- [x] Create SwiftData manager/service class
 
 ### 2.2 CloudKit Integration
-- [ ] Enable CloudKit capability in Xcode
-- [ ] Create CloudKit container
-- [ ] Configure NSPersistentCloudKitContainer
-- [ ] Set up CloudKit schema in CloudKit Dashboard
-- [ ] Map Core Data entities to CloudKit record types
-- [ ] Configure CloudKit container identifier
+- [x] Enable CloudKit capability in Xcode
+- [x] Create CloudKit container
+- [x] Configure ModelContainer with CloudKit (automatic with SwiftData)
+- [ ] Set up CloudKit schema in CloudKit Dashboard (auto-generated from SwiftData models)
+- [ ] Verify CloudKit sync is working
+- [x] Configure CloudKit container identifier
 - [ ] Test CloudKit container connection
 
 ### 2.3 Data Services
 - [ ] Create TaskRepository/Service class
 - [ ] Create ProjectRepository/Service class
 - [ ] Implement CRUD operations (Create, Read, Update, Delete)
-- [ ] Implement data fetching with predicates
-- [ ] Set up Core Data context management (main + background)
+- [ ] Implement data fetching with @Query and predicates
+- [ ] Set up SwiftData ModelContext management (main + background)
 - [ ] Implement merge policies for conflict resolution
-- [ ] Create data migration strategy
+- [ ] Create data migration strategy (SwiftData versioning)
 
 ## Phase 3: Core UI Components
 
@@ -284,7 +286,7 @@
 ## Phase 7: iCloud Sync & Offline Support
 
 ### 7.1 Sync Infrastructure
-- [ ] Configure NSPersistentCloudKitContainer properly
+- [ ] Configure SwiftData ModelContainer with CloudKit properly
 - [ ] Set up CloudKit schema synchronization
 - [ ] Implement sync status monitoring
 - [ ] Create sync status service/manager
@@ -363,7 +365,7 @@
 
 ### 11.1 Unit Tests
 - [ ] Write tests for data models
-- [ ] Test Core Data operations
+- [ ] Test SwiftData operations
 - [ ] Test repository/service classes
 - [ ] Test sync logic
 - [ ] Test conflict resolution
@@ -395,7 +397,7 @@
 ## Phase 12: Performance & Optimization
 
 ### 12.1 Performance
-- [ ] Optimize Core Data queries (fetch limits, predicates)
+- [ ] Optimize SwiftData queries (fetch limits, predicates)
 - [ ] Implement lazy loading for large lists
 - [ ] Add pagination or virtual scrolling
 - [ ] Optimize image/asset loading
@@ -511,8 +513,8 @@
 ## Quick Reference: Key Technologies
 
 - **Framework**: SwiftUI
-- **Data Persistence**: Core Data
-- **Cloud Sync**: CloudKit (NSPersistentCloudKitContainer)
+- **Data Persistence**: SwiftData
+- **Cloud Sync**: CloudKit (automatic with SwiftData ModelContainer)
 - **Font**: Sora (replacing SF Pro)
 - **Icons**: SF Symbols
 - **Platform**: macOS 15.0+ (Sequoia)
