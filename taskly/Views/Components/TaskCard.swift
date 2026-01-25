@@ -1,6 +1,10 @@
 import SwiftUI
+import SwiftData
 struct TaskCard: View {
-    let task: TaskItem
+    @Bindable var task: TaskItem
+    @Environment(\.modelContext) private var modelContext
+    @State private var isHovered = false
+    @State private var showDeleteConfirmation = false
     
     // Using your established helper for priority styling
     private var priorityColor: Color {
@@ -23,7 +27,9 @@ struct TaskCard: View {
         VStack(alignment: .leading, spacing: 16) { // Increased spacing for subtask clarity
             HStack(alignment: .top, spacing: 14) {
                 // Main Task Checkbox
-                Button(action: { /* Toggle Task */ }) {
+                Button(action: {
+                    toggleCompletion()
+                }) {
                     Circle()
                         .strokeBorder(task.isCompleted ? Color.purple : .secondary.opacity(0.3), lineWidth: 2)
                         .background(task.isCompleted ? Color.purple : .clear)
@@ -71,19 +77,75 @@ struct TaskCard: View {
                 
                 Spacer()
                 
-                // Priority Tag matching image_7223cb.jpg
-                if !task.isCompleted {
-                    Text("\(priorityText) Priority")
-                        .font(.system(size: 10, weight: .bold))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(priorityColor.opacity(0.1))
-                        .foregroundColor(priorityColor)
-                        .cornerRadius(6)
+                HStack(spacing: 8) {
+                    // Priority Tag matching image_7223cb.jpg
+                    if !task.isCompleted {
+                        Text("\(priorityText) Priority")
+                            .font(.system(size: 10, weight: .bold))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(priorityColor.opacity(0.1))
+                            .foregroundColor(priorityColor)
+                            .cornerRadius(6)
+                    }
+                    
+                    // Delete button - appears on hover
+                    if isHovered {
+                        Button(action: {
+                            showDeleteConfirmation = true
+                        }) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 12))
+                                .foregroundColor(.red.opacity(0.7))
+                                .padding(6)
+                                .background(Color.red.opacity(0.1))
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .transition(.opacity.combined(with: .scale))
+                    }
                 }
             }
         }
         .padding(20)
-        .glassCardStyle() // Reusing your custom glass modifier
+        .glassCardStyle()
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isHovered = hovering
+            }
+        }
+        .alert("Delete Task", isPresented: $showDeleteConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteTask()
+            }
+        } message: {
+            Text("Are you sure you want to delete this task? This action cannot be undone.")
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func toggleCompletion() {
+        task.isCompleted.toggle()
+        task.touch()
+        saveTask()
+    }
+    
+    private func deleteTask() {
+        modelContext.delete(task)
+        do {
+            try modelContext.save()
+        } catch {
+            print("Error deleting task: \(error)")
+        }
+    }
+    
+    private func saveTask() {
+        do {
+            try modelContext.save()
+        } catch {
+            print("Error saving task: \(error)")
+        }
     }
 }

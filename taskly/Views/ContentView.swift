@@ -27,29 +27,40 @@ struct ContentView: View {
         let now = Date()
         let startOfToday = calendar.startOfDay(for: now)
         let endOfToday = calendar.date(byAdding: .day, value: 1, to: startOfToday)!
+        let next12Hours = calendar.date(byAdding: .hour, value: 12, to: now)!
         
         switch selectedTab {
         case .inbox:
             // Tasks without a project
             return allTasks.filter { $0.project == nil && !$0.isCompleted }
         case .today:
-            // Tasks due today
+            // Tasks due today (completed or not)
             return allTasks.filter { task in
                 guard let dueDate = task.dueDate else { return false }
-                return dueDate >= startOfToday && dueDate < endOfToday && !task.isCompleted
+                return dueDate >= startOfToday && dueDate < endOfToday
             }
         case .upcoming:
-            // Tasks due in the future
+            // Incomplete tasks due in the next 12 hours
             return allTasks.filter { task in
+                guard !task.isCompleted else { return false }
                 guard let dueDate = task.dueDate else { return false }
-                return dueDate > endOfToday && !task.isCompleted
+                return dueDate > now && dueDate <= next12Hours
             }
         case .flagged:
-            // Flagged tasks
-            return allTasks.filter { $0.isFlagged && !$0.isCompleted }
+            // All tasks with flag (completed or not)
+            return allTasks.filter { $0.isFlagged }
         case .completed:
-            // Completed tasks
-            return allTasks.filter { $0.isCompleted }
+            // All completed tasks OR tasks with past due dates
+            return allTasks.filter { task in
+                if task.isCompleted {
+                    return true
+                }
+                // Include tasks with due dates in the past
+                if let dueDate = task.dueDate {
+                    return dueDate < now
+                }
+                return false
+            }
         }
     }
     

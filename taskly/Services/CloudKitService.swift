@@ -25,24 +25,32 @@ class CloudKitService: ObservableObject {
     
     /// Check CloudKit account status
     func checkAccountStatus() async -> CKAccountStatus {
-        let container = CKContainer(identifier: "iCloud.com.nickels.taskly")
         do {
+            // Use the container property which safely uses default container
             return try await container.accountStatus()
         } catch {
-            print("Error checking CloudKit account status: \(error)")
+            print("Error checking CloudKit account status: \(error.localizedDescription)")
             return .couldNotDetermine
         }
     }
     
     /// Get CloudKit container
+    /// Uses default container for safety - custom container requires proper code signing
     var container: CKContainer {
-        CKContainer(identifier: "iCloud.com.nickels.taskly")
+        // Use default container to avoid crashes when app isn't properly signed
+        // Custom container identifier requires proper entitlements and code signing
+        return CKContainer.default()
     }
     
     /// Verify CloudKit is available
     func verifyCloudKitAvailable() async -> Bool {
-        let status = await checkAccountStatus()
-        return status == .available
+        do {
+            let status = await checkAccountStatus()
+            return status == .available
+        } catch {
+            print("⚠️ Error verifying CloudKit availability: \(error.localizedDescription)")
+            return false
+        }
     }
     
     /// Fetch the current iCloud user's information directly from CloudKit

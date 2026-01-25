@@ -19,51 +19,51 @@ struct TaskDetailView: View {
                 // Empty State
                 EmptyStateView(showNewTaskModal: $showNewTaskModal)
             } else {
-                HStack(spacing: 0) {
-                    // Main Content Area
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 24) {
-                            HeaderView(title: title)
-                            
-                            AddTaskBar()
-                            
-                            // Task List
-                            VStack(spacing: 12) {
-                                ForEach(tasks) { task in
-                                    TaskCard(task: task)
-                                        .onTapGesture {
-                                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                                                selectedTask = task
-                                            }
+                VStack(spacing: 0) {
+                    HStack(spacing: 0) {
+                        // Main Content Area
+                        VStack(spacing: 0) {
+                            ScrollView {
+                                VStack(alignment: .leading, spacing: 24) {
+                                    HeaderView(title: title)
+                                    
+                                    AddTaskBar()
+                                    
+                                    // Task List
+                                    VStack(spacing: 12) {
+                                        ForEach(tasks) { task in
+                                            TaskCard(task: task)
+                                                .onTapGesture {
+                                                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                                                        selectedTask = task
+                                                    }
+                                                }
                                         }
+                                    }
+                                    
+                                    Spacer(minLength: 100)
                                 }
+                                .padding(.horizontal, 40)
+                                .padding(.top, 40)
                             }
                             
-                            Spacer(minLength: 100)
+                            // Fixed Bottom Progress - shifts with content
+                            DailyProgressFooter()
                         }
-                        .padding(.horizontal, 40)
-                        .padding(.top, 40)
+                        .frame(maxWidth: .infinity)
+                        
+                        // Right Side: Slide-in Detail Panel
+                        if let task = selectedTask {
+                            TaskItemDetailView(task: task, isPresented: Binding(
+                                get: { selectedTask != nil },
+                                set: { if !$0 { selectedTask = nil } }
+                            ))
+                            .transition(.move(edge: .trailing))
+                            .frame(width: 400)
+                            .frame(maxHeight: .infinity, alignment: .top)
+                            .id(task.id) // Force refresh when task changes
+                        }
                     }
-                    .frame(maxWidth: .infinity)
-                    
-                    // Right Side: Slide-in Detail Panel
-                    if let task = selectedTask {
-                        TaskItemDetailView(task: task, isPresented: Binding(
-                            get: { selectedTask != nil },
-                            set: { if !$0 { selectedTask = nil } }
-                        ))
-                        .transition(.move(edge: .trailing))
-                        .frame(width: 400)
-                        .frame(maxHeight: .infinity, alignment: .top)
-                    }
-                }
-            }
-            
-            // Fixed Bottom Progress - only show when there are tasks
-            if !tasks.isEmpty {
-                VStack {
-                    Spacer()
-                    DailyProgressFooter()
                 }
             }
         }
