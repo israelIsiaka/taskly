@@ -19,15 +19,23 @@ protocol ViewModelFactoryProtocol {
 /// Default ViewModel factory implementation
 class ViewModelFactory: ViewModelFactoryProtocol {
     // Dependencies can be injected here
-    private let container: DependencyContainer
+    private var container: DependencyContainer?
     
-    init(container: DependencyContainer = .shared) {
+    init(container: DependencyContainer? = nil) {
         self.container = container
+    }
+    
+    /// Get container, lazily accessing shared if needed (avoids circular dependency)
+    private var resolvedContainer: DependencyContainer {
+        if let container = container {
+            return container
+        }
+        return DependencyContainer.shared
     }
     
     func makeTodayViewModel() -> TodayViewModel {
         // Resolve any dependencies from container if needed
-        // Example: let taskService = container.resolve(TaskServiceProtocol.self)
+        // Example: let taskService = resolvedContainer.resolve(TaskServiceProtocol.self)
         return TodayViewModel()
     }
     

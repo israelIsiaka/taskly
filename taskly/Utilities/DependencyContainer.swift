@@ -90,10 +90,9 @@ class DependencyContainer: DependencyRegistering, DependencyResolving {
     // MARK: - Default Dependencies
     
     private func registerDefaultDependencies() {
-        // Register ViewModelFactory as singleton
-        registerSingleton(ViewModelFactory.self) {
-            ViewModelFactory()
-        }
+        // Don't register ViewModelFactory here to avoid circular dependency
+        // It will be registered later if needed, or accessed directly
+        // ViewModelFactory can be created without the container initially
         
         // Services will be registered here as they're created
         // Example when services are implemented:

@@ -59,27 +59,27 @@
 ## Phase 3: Core UI Components
 
 ### 3.1 Design System Foundation
-- [ ] Create color palette (light/dark mode)
-- [ ] Create glass effect utilities/modifiers
-- [ ] Create shadow system
-- [ ] Create spacing constants (8px grid)
-- [ ] Create corner radius constants
-- [ ] Create typography system (Sora font sizes/weights)
+- [x] Create color palette (light/dark mode)
+- [x] Create glass effect utilities/modifiers
+- [x] Create shadow system
+- [x] Create spacing constants (8px grid)
+- [x] Create corner radius constants
+- [x] Create typography system (Sora font sizes/weights)
 - [ ] Create reusable button styles
-- [ ] Create card/glass panel component
+- [x] Create card/glass panel component
 
 ### 3.2 Base Views
-- [ ] Create main window structure
-- [ ] Create left sidebar component
-- [ ] Create unified toolbar component
-- [ ] Create header section component
-- [ ] Create footer/stats section component
+- [x] Create main window structure
+- [x] Create left sidebar component
+- [x] Create unified toolbar component
+- [x] Create header section component
+- [x] Create footer/stats section component
 - [ ] Implement light/dark mode switching
-- [ ] Create empty state component
+- [x] Create empty state component
 - [ ] Create loading state component
 
 ### 3.3 Task Components
-- [ ] Create task card component
+- [x] Create task card component
 - [ ] Create checkbox component (circular, animated)
 - [ ] Create subtask component (indented)
 - [ ] Create task input field component
@@ -103,8 +103,8 @@
 - [ ] Implement project summary cards (bottom)
 
 ### 4.2 Inbox View
-- [ ] Implement Inbox view empty state
-- [ ] Implement Inbox view with unorganized tasks
+- [x] Implement Inbox view empty state
+- [x] Implement Inbox view with unorganized tasks
 - [ ] Add quick action buttons (assign to date/project)
 - [ ] Implement task input field
 - [ ] Add task count display
