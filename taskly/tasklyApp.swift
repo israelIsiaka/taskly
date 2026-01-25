@@ -27,7 +27,6 @@ struct tasklyApp: App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
             TaskItem.self,
             Project.self,
             Subtask.self,
