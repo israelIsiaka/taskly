@@ -51,7 +51,7 @@ struct EmptyStateView: View {
             
             // Text Content
             VStack(spacing: 12) {
-                Text("Inbox Zero!")
+                Text("All Clear!")
                     .font(.system(size: 32, weight: .bold))
                 
                 VStack(spacing: 4) {
@@ -69,7 +69,7 @@ struct EmptyStateView: View {
             }) {
                 HStack {
                     Image(systemName: "plus")
-                    Text("Add Task to Inbox")
+                    Text("Add Task")
                 }
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.white)

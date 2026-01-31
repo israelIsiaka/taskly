@@ -31,10 +31,10 @@ struct SidebarView: View {
                 
                 // Navigation Items
                 VStack(spacing: 4) {
-                    SidebarRow(title: "Inbox", icon: "tray", count: 0, isSelected: selectedTab == .inbox) { selectedTab = .inbox }
+                    SidebarRow(title: "Pending", icon: "tray", count: 0, isSelected: selectedTab == .pending) { selectedTab = .pending }
                     SidebarRow(title: "Today", icon: "calendar", isSelected: selectedTab == .today) { selectedTab = .today }
-                    SidebarRow(title: "Upcoming", icon: "clock", isSelected: selectedTab == .upcoming) { selectedTab = .upcoming }
-                    SidebarRow(title: "Flagged", icon: "flag", isSelected: selectedTab == .flagged) { selectedTab = .flagged }
+                    SidebarRow(title: "Calendar", icon: "calendar.day.timeline.left", isSelected: selectedTab == .calendar) { selectedTab = .calendar }
+                    SidebarRow(title: "Projects", icon: "folder", isSelected: selectedTab == .projects) { selectedTab = .projects }
                     SidebarRow(title: "Completed", icon: "checkmark.circle", isSelected: selectedTab == .completed) { selectedTab = .completed }
                 }
                 .padding(.horizontal, 12)
@@ -127,6 +127,6 @@ struct ProfileFooter: View {
 }
 
 #Preview {
-    SidebarView(selectedTab: .constant(.inbox))
+    SidebarView(selectedTab: .constant(.pending))
         .preferredColorScheme(.light)
 }

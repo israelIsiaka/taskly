@@ -78,6 +78,20 @@ struct TaskCard: View {
                 Spacer()
                 
                 HStack(spacing: 8) {
+                    // Project badge - colored card when task has a project
+                    if let project = task.project {
+                        HStack(spacing: 4) {
+                            Image(systemName: project.icon)
+                                .font(.system(size: 10, weight: .semibold))
+                            Text(project.name)
+                                .font(.system(size: 10, weight: .bold))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(project.colorValue.opacity(0.2))
+                        .foregroundColor(project.colorValue)
+                        .cornerRadius(6)
+                    }
                     // Priority Tag matching image_7223cb.jpg
                     if !task.isCompleted {
                         Text("\(priorityText) Priority")

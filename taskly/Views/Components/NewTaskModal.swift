@@ -19,11 +19,13 @@ struct NewTaskModal: View {
     @State private var showNewSubtaskField = false
     @State private var status = "In Progress"
     @State private var priority = "MED"
-    @State private var dueDate: Date? = nil
+    @State private var dueDate: Date = Date()
     @State private var showDatePicker = false
     @State private var isFlagged = false
+    @State private var selectedProject: Project? = nil
     @State private var showValidationError = false
     @State private var isCreating = false
+    @Query(sort: \Project.name) private var projects: [Project]
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -187,8 +189,8 @@ struct NewTaskModal: View {
             // Bottom Grid (Date, Project, Priority, Status)
             VStack(spacing: 16) {
                 HStack(spacing: 16) {
-                    DatePickerField(selectedDate: $dueDate, showPicker: $showDatePicker)
-                    ModalInputPicker(label: "PROJECT", value: "Inbox", hasChevron: true)
+                    DateTimePickerField(selectedDate: $dueDate, showPicker: $showDatePicker)
+                    ProjectPickerField(selectedProject: $selectedProject, projects: projects)
                 }
                 
                 HStack(spacing: 16) {
@@ -328,7 +330,7 @@ struct NewTaskModal: View {
             dueDate: dueDate,
             priority: priorityEnum,
             isFlagged: isFlagged,
-            project: nil // TODO: Add project selection functionality
+            project: selectedProject
         )
         
         // Create and attach subtasks
@@ -364,11 +366,54 @@ struct NewTaskModal: View {
         showNewSubtaskField = false
         status = "In Progress"
         priority = "MED"
-        dueDate = nil
+        dueDate = Date()
         showDatePicker = false
         isFlagged = false
+        selectedProject = nil
         showValidationError = false
         isCreating = false
+    }
+}
+
+// Project picker field for New Task modal
+struct ProjectPickerField: View {
+    @Binding var selectedProject: Project?
+    let projects: [Project]
+
+    private var displayValue: String {
+        selectedProject?.name ?? "None"
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("PROJECT")
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(ColorPalette.textTertiary)
+            Menu {
+                Button("None") {
+                    selectedProject = nil
+                }
+                ForEach(projects, id: \.id) { project in
+                    Button(project.name) {
+                        selectedProject = project
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(displayValue)
+                        .foregroundColor(ColorPalette.textPrimary)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.caption2)
+                        .foregroundStyle(ColorPalette.textSecondary)
+                }
+                .font(.system(size: 14))
+                .padding(10)
+                .background(ColorPalette.surface.opacity(0.5))
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+        }
     }
 }
 
@@ -408,7 +453,81 @@ struct ModalInputPicker: View {
     }
 }
 
-// Date Picker Field
+// Date and time picker field (required, min = start of today, no past dates)
+struct DateTimePickerField: View {
+    @Binding var selectedDate: Date
+    @Binding var showPicker: Bool
+    @State private var tempDate: Date = Date()
+
+    private var minDate: Date {
+        Calendar.current.startOfDay(for: Date())
+    }
+
+    private var displayText: String {
+        let df = DateFormatter()
+        df.dateStyle = .medium
+        df.timeStyle = .short
+        return df.string(from: selectedDate)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("DUE DATE & TIME")
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(ColorPalette.textTertiary)
+
+            Button(action: {
+                tempDate = max(selectedDate, minDate)
+                showPicker.toggle()
+            }) {
+                HStack {
+                    Image(systemName: "calendar")
+                        .foregroundStyle(ColorPalette.textSecondary)
+                        .font(.system(size: 12))
+                    Text(displayText)
+                        .foregroundColor(ColorPalette.textPrimary)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.caption2)
+                        .foregroundStyle(ColorPalette.textSecondary)
+                }
+                .font(.system(size: 14))
+                .padding(10)
+                .background(ColorPalette.surface.opacity(0.5))
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $showPicker, arrowEdge: .bottom) {
+                VStack(alignment: .leading, spacing: 12) {
+                    DatePicker(
+                        "Date & time",
+                        selection: Binding(
+                            get: { tempDate },
+                            set: { tempDate = $0 }
+                        ),
+                        in: minDate...,
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+                    .datePickerStyle(.compact)
+                    .labelsHidden()
+
+                    HStack {
+                        Spacer()
+                        Button("Done") {
+                            selectedDate = max(tempDate, minDate)
+                            showPicker = false
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+                .padding(16)
+                .frame(width: 320)
+            }
+        }
+    }
+}
+
+// Date Picker Field (optional, for use elsewhere)
 struct DatePickerField: View {
     @Binding var selectedDate: Date?
     @Binding var showPicker: Bool

@@ -13,17 +13,14 @@ import SwiftUI
 enum SFSymbols {
     // MARK: - Navigation Icons
     
-    /// Inbox view icon
-    static let inbox = "tray"
+    /// Pending view icon
+    static let pending = "tray"
     
     /// Today view icon
     static let today = "calendar"
     
-    /// Upcoming view icon
-    static let upcoming = "clock"
-    
-    /// Flagged view icon
-    static let flagged = "flag"
+    /// Projects view icon
+    static let projects = "folder"
     
     /// Completed view icon
     static let completed = "checkmark.circle"
@@ -124,8 +121,8 @@ enum SFSymbols {
     
     // MARK: - Empty States
     
-    /// Empty inbox
-    static let emptyInbox = "tray"
+    /// Empty pending
+    static let emptyPending = "tray"
     
     /// Empty calendar
     static let emptyCalendar = "calendar.badge.exclamationmark"
@@ -141,10 +138,9 @@ enum SFSymbols {
     /// Get icon for a specific view type
     static func icon(for viewType: ViewType) -> String {
         switch viewType {
-        case .inbox: return inbox
+        case .pending: return pending
         case .today: return today
-        case .upcoming: return upcoming
-        case .flagged: return flagged
+        case .projects: return projects
         case .completed: return completed
         case .settings: return settings
         case .calendar: return calendar
@@ -153,10 +149,9 @@ enum SFSymbols {
     
     /// View types for icon mapping
     enum ViewType {
-        case inbox
+        case pending
         case today
-        case upcoming
-        case flagged
+        case projects
         case completed
         case settings
         case calendar
@@ -167,13 +162,13 @@ enum SFSymbols {
 
 extension Image {
     /// Create an Image from an SF Symbol name
-    /// Usage: Image(sfSymbol: .inbox)
+    /// Usage: Image(sfSymbol: .pending)
     init(sfSymbol: String) {
         self.init(systemName: sfSymbol)
     }
     
     /// Create an Image from SFSymbols enum
-    /// Usage: Image(sfSymbol: SFSymbols.inbox)
+    /// Usage: Image(sfSymbol: SFSymbols.pending)
     init(_ symbol: String) {
         self.init(systemName: symbol)
     }
